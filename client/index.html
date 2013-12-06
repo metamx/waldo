@@ -42,12 +42,14 @@
     <table class='table table-hover col-md-12' ng-show='!loading() && !emptyList()'>
       <thead>
         <tr>
+          <th class='col-md-1'>#</th>
           <th class='col-md-2'>Time</th>
-          <th class='col-md-10'>Event</th>
+          <th class='col-md-9'>Event</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat='searchResult in searchResults'>
+          <td><span class="glyphicon glyphicon-chevron-right"></span></td>
           <td>{{getTime(searchResult)}}</td>
           <td>{{searchResult}}</td>
         </tr>
