@@ -17,6 +17,11 @@ if (env === 'development') {
   app.use(express.errorHandler());
 }
 
+app.post('/search', function(req, res) {
+  console.log('qs: ' + JSON.stringify(req.query));
+  res.send(200, []);
+});
+
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });

@@ -6,21 +6,49 @@
 <body>
 <div ng-controller='searchController'>
   <form>
-    <input type='text' ng-model='searchTerm'/>
+    <input type='text' ng-model='searchQuery'/>
     <button ng-click='search()'>Search</button>
   </form>
   <div>
-    No search results at the moment.
+    <p ng-show='emptyList()'>No search results at the moment.</p>
+    <p ng-show='loading()'>Loading...</p>
+    <ul>
+    </ul>
   </div>
 </div>
 <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'>
 </script>
 <script type='text/javascript'>
 var waldoApp = angular.module('waldoApp', []);
-var searchController = waldoApp.controller('searchController', function($scope) {
+var searchController = waldoApp.controller('searchController', function($scope, $http) {
+  $scope.state = 'displaying';
+
+  $scope.searchResults = [];
+
   $scope.search = function() {
-    alert($scope.searchTerm);
+    var querystring = searchQueryToQuerystring($scope.searchQuery);
+    $http.post('/search?' + querystring).then(function(result) {
+      $scope.state = 'displaying';
+      if (result.status === 200) {
+        $scope.searchResults = result.data;
+      } else {
+        alert('Search request failed, displaying previous data.');
+      }
+    });
+    $scope.state = 'loading';
   };
+
+  $scope.emptyList = function() {
+    return ($scope.state === 'displaying' && $scope.searchResults.length === 0);
+  }
+
+  $scope.loading = function() {
+    return $scope.state === 'loading';
+  }
+
+  function searchQueryToQuerystring(query) {
+    return query.split(' ').join('&');
+  }
 });
 </script>
 </body>
