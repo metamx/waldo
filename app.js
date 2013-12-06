@@ -11,7 +11,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'client')));
+app.use(express.static(__dirname + '/client'));
 
 if (env === 'development') {
   app.use(express.errorHandler());
