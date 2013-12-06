@@ -18,7 +18,9 @@ if (env === 'development') {
 }
 
 app.post('/search', function(req, res) {
-  console.log('qs: ' + JSON.stringify(req.query));
+  console.log('qs: ' + JSON.stringify(req.query, null, 2));
+  var druidQuery = searchQueryToDruidQuery(req.query);
+  console.log('druidQuery: ' + JSON.stringify(druidQuery, null, 2))
   var events = druidResultToEvents(mockDruidResult);
   res.send(200, {
     events: events
@@ -28,6 +30,39 @@ app.post('/search', function(req, res) {
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
+
+var searchQueryToDruidQuery = function(searchQuery) {
+  var filters = searchQueryToFilters(searchQuery);
+  var druidQuery = {
+    "queryType": "select",
+    "dataSource": "dash_logs",
+    "dimensions": [],
+    "metrics": [],
+    "granularity": "all",
+    "intervals": [
+      "2013-12-06T01/2013-12-06T23"
+    ],
+    "filter": {
+      "type":"and",
+      "fields": filters
+    },
+    "pagingSpec": { "pagingIdentifiers": {}, "threshold": 50 }
+  };
+  return druidQuery;
+};
+
+var searchQueryToFilters = function(searchQuery) {
+  var filters = [];
+  for (var key in searchQuery) {
+    var val = searchQuery[key];
+    filters.push({
+      type: 'selector',
+      dimension: key,
+      value: val
+    });
+  }
+  return filters;
+};
 
 var druidResultToEvents = function(druidResult) {
   flattenedEvents = [];
