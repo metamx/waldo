@@ -57,7 +57,13 @@ tbody td:hover {
             <span ng-show='expandedIndex($index)' class='glyphicon glyphicon-chevron-down'></span>
           </td>
           <td>{{getTime(searchResult)}}</td>
-          <td>{{searchResult}}</td>
+          <td>
+            {{searchResult}}
+            <div ng-show='expandedIndex($index)'>
+              <br/>
+              <pre>{{expandedEvent(searchResult)}}</pre>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -109,6 +115,15 @@ var searchController = waldoApp.controller('searchController', function($scope, 
 
   $scope.expandedIndex = function(index) {
     return $scope.expandedRow === index;
+  }
+
+  $scope.expandedEvent = function(event) {
+    var html = [];
+    for (var key in event) {
+      var val = event[key];
+      html.push(key + '=' + val);
+    }
+    return html.join('\n');
   }
 
   function searchQueryToQuerystring(query) {
