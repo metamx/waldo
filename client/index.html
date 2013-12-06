@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
 <head>
 <title>Waldo!</title>
 </head>
 <body>
-Where is Waldo?
+<div id='search-control'>
+  <input type='text' ng-model='searchTerm'/>
+  <button>Search</button>
+  <br/>
+  {{searchTerm}}
+</div>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'></script>
 </body>
 </html>
