@@ -3,6 +3,7 @@ var async = require('async')
   , express = require('express')
   , http = require('http')
   , path = require('path')
+  , url = require('url')
   , request = require('request');
 
 var app = express();
@@ -20,7 +21,7 @@ if (env === 'development') {
 }
 
 app.post('/search', function(req, res) {
-  var druidQuery = searchQueryToDruidQuery(req.query);
+  var druidQuery = searchQueryToDruidQuery(url.parse(req.url).query);
   queryDruid(druidQuery, function(err, result) {
     var events = druidResultToEvents(result);
     res.send(200, {
@@ -45,8 +46,10 @@ var queryDruid = function(query, callback) {
   });
 };
 
-var searchQueryToDruidQuery = function(searchQuery) {
-  var filters = searchQueryToFilters(searchQuery);
+var searchQueryToDruidQuery = function(unparsedQuery) {
+  searchQuery = unparsedQuery.replace(/&/g,'');
+
+  var filter = searchQueryToFilter(searchQuery);
   var druidQuery = {
     "queryType": "select",
     "dataSource": "dash_logs",
@@ -56,27 +59,50 @@ var searchQueryToDruidQuery = function(searchQuery) {
     "intervals": [
       "2013-12-01/2013-12-20"
     ],
-    "filter": {
-      "type":"and",
-      "fields": filters
-    },
+    "filter": filter,
     "pagingSpec": { "pagingIdentifiers": {}, "threshold": 50 }
   };
   return druidQuery;
 };
 
-var searchQueryToFilters = function(searchQuery) {
-  var filters = [];
-  for (var key in searchQuery) {
-    var val = searchQuery[key];
-    filters.push({
-      type: 'selector',
-      dimension: key,
-      value: val
-    });
+var searchQueryToFilter = function(searchQuery) {
+  var andParts = searchQuery.split('$$');
+  if (andParts.length > 1) {
+    return {
+      type: 'and',
+      fields: iterParts(andParts)
+    }; 
   }
-  return filters;
+
+  if (orParts.length > 1) {
+    console.log(orParts);
+    return {
+      type: 'or',
+      fields: iterParts(orParts)
+    };
+  }
+
+  return makeSelectorFilter(searchQuery); 
 };
+
+var iterParts = function(searchQueries) {
+  var filters = [];
+
+  searchQueries.forEach(function(searchQuery) {
+    filters.push(searchQueryToFilter(searchQuery));
+  });
+  return filters;
+}
+
+var makeSelectorFilter = function(searchQuery) {
+  var selectorParts = searchQuery.split('=');
+
+  return {
+    type: 'selector',
+    dimension: selectorParts[0],
+    value: selectorParts[1]
+  };
+}
 
 var druidResultToEvents = function(druidResult) {
   console.log('type is: ' + typeof druidResult);
