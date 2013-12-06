@@ -39,9 +39,16 @@
     <div class='col-md-12' ng-show='emptyList()'>No search results at the moment.</div>
   </div>
   <div class='row'>
-    <ul class='col-md-12' ng-show='!loading()'>
-      <li ng-repeat='searchResult in searchResults'>{{searchResult}}</li>
-    </ul>
+    <table class='table col-md-12' ng-show='!loading() && !emptyList()'>
+      <tr>
+        <th class='col-md-2'>Time</th>
+        <th class='col-md-10'>Event</th>
+      </tr>
+      <tr ng-repeat='searchResult in searchResults'>
+        <td>{{getTime(searchResult)}}</td>
+        <td>{{searchResult}}</td>
+      </tr>
+    </table>
   </div>
 </div>
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -73,6 +80,10 @@ var searchController = waldoApp.controller('searchController', function($scope, 
 
   $scope.loading = function() {
     return $scope.state === 'loading';
+  }
+
+  $scope.getTime = function(event) {
+    return new Date(event.timestamp).toLocaleString();
   }
 
   function searchQueryToQuerystring(query) {
