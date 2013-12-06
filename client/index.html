@@ -17,6 +17,12 @@
 tbody td:hover {
   background-color: #f5f5f5;
 }
+pre {
+  background-color: white;
+}
+.expanded {
+  background-color: #f5f5f5;
+}
 </style>
 </head>
 <body>
@@ -51,7 +57,7 @@ tbody td:hover {
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat='searchResult in searchResults'>
+        <tr ng-repeat='searchResult in searchResults' ng-class='{ "expanded": expandedIndex($index) }'>
           <td ng-click='expandEvent($index)'>
             <span ng-show='!expandedIndex($index)' class="glyphicon glyphicon-chevron-right"></span>
             <span ng-show='expandedIndex($index)' class='glyphicon glyphicon-chevron-down'></span>
