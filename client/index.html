@@ -52,7 +52,10 @@ tbody td:hover {
       </thead>
       <tbody>
         <tr ng-repeat='searchResult in searchResults'>
-          <td><span class="glyphicon glyphicon-chevron-right"></span></td>
+          <td ng-click='expandEvent($index)'>
+            <span ng-show='!expandedIndex($index)' class="glyphicon glyphicon-chevron-right"></span>
+            <span ng-show='expandedIndex($index)' class='glyphicon glyphicon-chevron-down'></span>
+          </td>
           <td>{{getTime(searchResult)}}</td>
           <td>{{searchResult}}</td>
         </tr>
@@ -67,7 +70,7 @@ tbody td:hover {
 var waldoApp = angular.module('waldoApp', []);
 var searchController = waldoApp.controller('searchController', function($scope, $http) {
   $scope.state = 'displaying';
-
+  $scope.expandedRow = null;
   $scope.searchResults = [];
 
   $scope.search = function() {
@@ -76,6 +79,7 @@ var searchController = waldoApp.controller('searchController', function($scope, 
       $scope.state = 'displaying';
       if (result.status === 200) {
         $scope.searchResults = result.data.events;
+        $scope.expandedRow = null;
       } else {
         alert('Search request failed, displaying previous data.');
       }
@@ -93,6 +97,18 @@ var searchController = waldoApp.controller('searchController', function($scope, 
 
   $scope.getTime = function(event) {
     return new Date(event.timestamp).toLocaleString();
+  }
+
+  $scope.expandEvent = function(index) {
+    if ($scope.expandedRow === index) {
+      $scope.expandedRow = null;
+    } else {
+      $scope.expandedRow = index;
+    }
+  }
+
+  $scope.expandedIndex = function(index) {
+    return $scope.expandedRow === index;
   }
 
   function searchQueryToQuerystring(query) {
