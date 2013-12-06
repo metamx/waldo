@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app='waldoApp'>
 <head>
 <title>Waldo!</title>
 </head>
 <body>
-<div id='search-control'>
-  <input type='text' ng-model='searchTerm'/>
-  <button>Search</button>
-  <br/>
-  {{searchTerm}}
+<div ng-controller='searchController'>
+  <form>
+    <input type='text' ng-model='searchTerm'/>
+    <button ng-click='search()'>Search</button>
+  </form>
+  <div>
+    No search results at the moment.
+  </div>
 </div>
-<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'></script>
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'>
+</script>
+<script type='text/javascript'>
+var waldoApp = angular.module('waldoApp', []);
+var searchController = waldoApp.controller('searchController', function($scope) {
+  $scope.search = function() {
+    alert($scope.searchTerm);
+  };
+});
+</script>
 </body>
 </html>
