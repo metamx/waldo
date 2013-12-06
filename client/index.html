@@ -4,6 +4,17 @@
 <title>Waldo!</title>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<style>
+.row {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 0;
+}
+.col-md-12 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+</style>
 </head>
 <body>
 <div class="navbar navbar-default" role="navigation">
@@ -18,14 +29,16 @@
     <div class="input-group">
       <input type="text" class="form-control" ng-model='searchQuery'>
       <span class="input-group-btn">
-        <button class="btn btn-default" type="button" ng-click='search()'>Search</button>
+        <button class="btn btn-default" type="submit" ng-click='search()'>Search</button>
       </span>
     </div>
   </form>
-  <p>{{searchResults.length}} events fetched.</p>
   <div class='row'>
-    <p class='col-md-12' ng-show='emptyList()'>No search results at the moment.</p>
-    <p class='col-md-12' ng-show='loading()'>Loading...</p>
+    <div class='col-md-12' ng-show='loading()'>Loading...</div>
+    <div class='col-md-12' ng-show='!loading() && !emptyList()'>{{searchResults.length}} events fetched.</div>
+    <div class='col-md-12' ng-show='emptyList()'>No search results at the moment.</div>
+  </div>
+  <div class='row'>
     <ul class='col-md-12' ng-show='!loading()'>
       <li ng-repeat='searchResult in searchResults'>{{searchResult}}</li>
     </ul>
