@@ -74,6 +74,7 @@ var searchQueryToFilter = function(searchQuery) {
     }; 
   }
 
+  var orParts = searchQuery.split('||');
   if (orParts.length > 1) {
     console.log(orParts);
     return {
