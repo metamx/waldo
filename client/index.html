@@ -2,30 +2,75 @@
 <html ng-app='waldoApp'>
 <head>
 <title>Waldo!</title>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<style>
+.row {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 0;
+}
+.col-md-12 {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+tbody td:hover {
+  background-color: #f5f5f5;
+}
+</style>
 </head>
 <body>
-<div ng-controller='searchController'>
-  <form>
-    <input type='text' ng-model='searchQuery'/>
-    <button ng-click='search()'>Search</button>
-  </form>
-  <div>
-    <p ng-show='emptyList()'>No search results at the moment.</p>
-    <p ng-show='loading()'>Loading...</p>
-    <ul ng-show='!loading()'>
-      <li ng-repeat='searchResult in searchResults'>
-        {{searchResult}}
-      </li>
-    </ul>
+<div class="navbar navbar-default" role="navigation">
+  <div class='container'>
+    <div class="navbar-header">
+      <a class="navbar-brand" style="color:black">Where is Waldo?</a>
+    </div>
   </div>
 </div>
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'>
-</script>
+<div ng-controller='searchController' class='container'>
+  <form class='row'>
+    <div class="input-group">
+      <input type="text" class="form-control" ng-model='searchQuery'>
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit" ng-click='search()'>Search</button>
+      </span>
+    </div>
+  </form>
+  <div class='row'>
+    <div class='col-md-12' ng-show='loading()'>Loading...</div>
+    <div class='col-md-12' ng-show='!loading() && !emptyList()'>{{searchResults.length}} events fetched.</div>
+    <div class='col-md-12' ng-show='emptyList()'>No search results at the moment.</div>
+  </div>
+  <div class='row'>
+    <table class='table col-md-12' ng-show='!loading() && !emptyList()'>
+      <thead>
+        <tr>
+          <th class='col-md-1'>#</th>
+          <th class='col-md-2'>Time</th>
+          <th class='col-md-9'>Event</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat='searchResult in searchResults'>
+          <td ng-click='expandEvent($index)'>
+            <span ng-show='!expandedIndex($index)' class="glyphicon glyphicon-chevron-right"></span>
+            <span ng-show='expandedIndex($index)' class='glyphicon glyphicon-chevron-down'></span>
+          </td>
+          <td>{{getTime(searchResult)}}</td>
+          <td>{{searchResult}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'></script>
 <script type='text/javascript'>
 var waldoApp = angular.module('waldoApp', []);
 var searchController = waldoApp.controller('searchController', function($scope, $http) {
   $scope.state = 'displaying';
-
+  $scope.expandedRow = null;
   $scope.searchResults = [];
 
   $scope.search = function() {
@@ -34,6 +79,7 @@ var searchController = waldoApp.controller('searchController', function($scope, 
       $scope.state = 'displaying';
       if (result.status === 200) {
         $scope.searchResults = result.data.events;
+        $scope.expandedRow = null;
       } else {
         alert('Search request failed, displaying previous data.');
       }
@@ -47,6 +93,22 @@ var searchController = waldoApp.controller('searchController', function($scope, 
 
   $scope.loading = function() {
     return $scope.state === 'loading';
+  }
+
+  $scope.getTime = function(event) {
+    return new Date(event.timestamp).toLocaleString();
+  }
+
+  $scope.expandEvent = function(index) {
+    if ($scope.expandedRow === index) {
+      $scope.expandedRow = null;
+    } else {
+      $scope.expandedRow = index;
+    }
+  }
+
+  $scope.expandedIndex = function(index) {
+    return $scope.expandedRow === index;
   }
 
   function searchQueryToQuerystring(query) {
