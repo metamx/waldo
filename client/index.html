@@ -13,6 +13,9 @@
     <p ng-show='emptyList()'>No search results at the moment.</p>
     <p ng-show='loading()'>Loading...</p>
     <ul>
+      <li ng-repeat='searchResult in searchResults'>
+        {{searchResult}}
+      </li>
     </ul>
   </div>
 </div>
@@ -30,7 +33,7 @@ var searchController = waldoApp.controller('searchController', function($scope, 
     $http.post('/search?' + querystring).then(function(result) {
       $scope.state = 'displaying';
       if (result.status === 200) {
-        $scope.searchResults = result.data;
+        $scope.searchResults = result.data.events;
       } else {
         alert('Search request failed, displaying previous data.');
       }
