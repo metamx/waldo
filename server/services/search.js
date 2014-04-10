@@ -3,7 +3,10 @@ var config = require('../../config');
 var Adapters = require('../adapters');
 
 function searchQueryToDruidQuery(searchQuery) {
-  searchQuery = searchQuery.replace(/&/g,'');
+  var intervalEnd = new Date();
+  var intervalStart = new Date(intervalEnd - 300 * 60 * 1000);
+  intervalEnd = intervalEnd.toISOString();
+  intervalStart = intervalStart.toISOString();
 
   var filter = searchQueryToFilter(searchQuery);
   var druidQuery = {
@@ -13,7 +16,7 @@ function searchQueryToDruidQuery(searchQuery) {
     "metrics": [],
     "granularity": "all",
     "intervals": [
-      "2013-12-01/2013-12-20"
+      intervalStart + '/' + intervalEnd
     ],
     "filter": filter,
     "pagingSpec": { "pagingIdentifiers": {}, "threshold": 50 }
@@ -22,42 +25,29 @@ function searchQueryToDruidQuery(searchQuery) {
 }
 
 function searchQueryToFilter(searchQuery) {
-  var andParts = searchQuery.split('$$');
-  if (andParts.length > 1) {
-    return {
-      type: 'and',
-      fields: iterParts(andParts)
-    };
-  }
+  var filter = {
+    type: 'selector',
+    dimension: 'service',
+    value: 'druid/metrics/bard'
+  };
 
-  var orParts = searchQuery.split('||');
-  if (orParts.length > 1) {
-    return {
-      type: 'or',
-      fields: iterParts(orParts)
-    };
-  }
+  if (!searchQuery) return filter;
 
-  return makeSelectorFilter(searchQuery);
-};
+  var andParts = searchQuery.split(/\s*\$\s*/);
+  return {
+    type: 'and',
+    fields: andParts.map(searchTermToDruidFilter)
+  };
+}
 
-function makeSelectorFilter(searchQuery) {
-  var selectorParts = searchQuery.split('=');
+function searchTermToDruidFilter(searchTerm) {
+  var selectorParts = searchTerm.split('=');
 
   return {
     type: 'selector',
     dimension: selectorParts[0],
     value: selectorParts[1]
   };
-}
-
-function iterParts(searchQueries) {
-  var filters = [];
-
-  searchQueries.forEach(function(searchQuery) {
-    filters.push(searchQueryToFilter(searchQuery));
-  });
-  return filters;
 }
 
 function queryDruid(druidQuery, callback) {

@@ -1,4 +1,6 @@
 
 waldoApp.factory('wlSearchData', function() {
-  return [];
+  return {
+    data: []
+  };
 });

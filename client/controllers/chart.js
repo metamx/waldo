@@ -3,7 +3,7 @@ waldoApp.controller('chartController', function($scope, wlSearchData, wlSearchSt
   $scope.searchResults = wlSearchData;
 
   $scope.emptyList = function() {
-    return (wlSearchState.state === 'displaying' && wlSearchData.length === 0);
+    return (wlSearchState.state === 'displaying' && wlSearchData.data.length === 0);
   }
 
   $scope.loading = function() {

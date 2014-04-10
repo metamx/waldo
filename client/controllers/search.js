@@ -4,7 +4,7 @@ waldoApp.controller('searchController', function($scope, $http, wlSearchData, wl
     var querystring = searchQueryToQuerystring($scope.searchQuery);
     $http.post('/search?' + querystring).then(function(result) {
       wlSearchState.state = 'displaying';
-      wlSearchData = result.data.events;
+      wlSearchData.data = result.data.events;
       wlSearchState.expandedRow = null;
     }, function(reason) {
       wlSearchState.state = 'displaying';

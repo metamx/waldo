@@ -28,14 +28,14 @@
       Loading...
     </div>
     <div class='col-md-12' ng-show='!loading() && !emptyList()'>
-      {{searchResults.length}} events fetched.
+      {{searchResults.data.length}} events fetched.
     </div>
     <div class='col-md-12' ng-show='emptyList()'>
       No search results at the moment.
     </div>
   </div>
   <div class='row' ng-show='!loading() && !emptyList()'>
-    <wlTabular></wlTabular>
+    <wl-tabular></wl-tabular>
   </div>
 </div>
 
