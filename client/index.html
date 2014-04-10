@@ -1,141 +1,52 @@
 <!DOCTYPE html>
 <html ng-app='waldoApp'>
+
 <head>
 <title>Waldo!</title>
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
-<style>
-.row {
-  padding-top: 5px;
-  padding-bottom: 5px;
-  margin: 0;
-}
-.col-md-12 {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-tbody td:hover {
-  background-color: #f5f5f5;
-}
-pre {
-  background-color: white;
-}
-.expanded {
-  background-color: #f5f5f5;
-}
-</style>
+<link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css'>
+<link rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css'>
+<link rel='stylesheet' href='/style/app.css'>
 </head>
+
 <body>
-<div class="navbar navbar-default" role="navigation">
-  <div class='container'>
-    <div class="navbar-header">
-      <a class="navbar-brand" style="color:black">Where's Waldo?</a>
-    </div>
-  </div>
+<div class='header'>
+  <div class='container'><h3>Where's Waldo?</h3></div>
 </div>
+
 <div ng-controller='searchController' class='container'>
-  <form class='row'>
-    <div class="input-group">
-      <input type="text" class="form-control" ng-model='searchQuery'>
-      <span class="input-group-btn">
-        <button class="btn btn-default" type="submit" ng-click='search()'>Search</button>
-      </span>
-    </div>
-  </form>
-  <div class='row'>
-    <div class='col-md-12' ng-show='loading()'>Loading...</div>
-    <div class='col-md-12' ng-show='!loading() && !emptyList()'>{{searchResults.length}} events fetched.</div>
-    <div class='col-md-12' ng-show='emptyList()'>No search results at the moment.</div>
-  </div>
-  <div class='row'>
-    <table class='table col-md-12' ng-show='!loading() && !emptyList()'>
-      <thead>
-        <tr>
-          <th class='col-md-1'>#</th>
-          <th class='col-md-2'>Time</th>
-          <th class='col-md-9'>Event</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat='searchResult in searchResults' ng-class='{ "expanded": expandedIndex($index) }'>
-          <td ng-click='expandEvent($index)'>
-            <span ng-show='!expandedIndex($index)' class="glyphicon glyphicon-chevron-right"></span>
-            <span ng-show='expandedIndex($index)' class='glyphicon glyphicon-chevron-down'></span>
-          </td>
-          <td>{{getTime(searchResult)}}</td>
-          <td>
-            {{searchResult}}
-            <div ng-show='expandedIndex($index)'>
-              <br/>
-              <pre>{{expandedEvent(searchResult)}}</pre>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class='input-group'>
+    <input type='text' class='form-control' ng-model='searchQuery'>
+    <span class='input-group-btn'>
+      <button class='btn btn-default' type='submit' ng-click='search()'>Search</button>
+    </span>
   </div>
 </div>
+
+<div ng-controller='chartController' class='container'>
+  <div class='row'>
+    <div class='col-md-12' ng-show='loading()'>
+      Loading...
+    </div>
+    <div class='col-md-12' ng-show='!loading() && !emptyList()'>
+      {{searchResults.length}} events fetched.
+    </div>
+    <div class='col-md-12' ng-show='emptyList()'>
+      No search results at the moment.
+    </div>
+  </div>
+  <div class='row' ng-show='!loading() && !emptyList()'>
+    <wlTabular></wlTabular>
+  </div>
+</div>
+
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js'></script>
-<script type='text/javascript'>
-var waldoApp = angular.module('waldoApp', []);
-var searchController = waldoApp.controller('searchController', function($scope, $http) {
-  $scope.state = 'displaying';
-  $scope.expandedRow = null;
-  $scope.searchResults = [];
-
-  $scope.search = function() {
-    var querystring = searchQueryToQuerystring($scope.searchQuery);
-    $http.post('/search?' + querystring).then(function(result) {
-      $scope.state = 'displaying';
-      if (result.status === 200) {
-        $scope.searchResults = result.data.events;
-        $scope.expandedRow = null;
-      } else {
-        alert('Search request failed, displaying previous data.');
-      }
-    });
-    $scope.state = 'loading';
-  };
-
-  $scope.emptyList = function() {
-    return ($scope.state === 'displaying' && $scope.searchResults.length === 0);
-  }
-
-  $scope.loading = function() {
-    return $scope.state === 'loading';
-  }
-
-  $scope.getTime = function(event) {
-    return new Date(event.timestamp).toLocaleString();
-  }
-
-  $scope.expandEvent = function(index) {
-    if ($scope.expandedRow === index) {
-      $scope.expandedRow = null;
-    } else {
-      $scope.expandedRow = index;
-    }
-  }
-
-  $scope.expandedIndex = function(index) {
-    return $scope.expandedRow === index;
-  }
-
-  $scope.expandedEvent = function(event) {
-    var html = [];
-    for (var key in event) {
-      var val = event[key];
-      html.push(key + '=' + val);
-    }
-    return html.join('\n');
-  }
-
-  function searchQueryToQuerystring(query) {
-    return query.split(' ').join('&');
-  }
-});
-</script>
+<script src='/app.js'></script>
+<script src='/services/wl_search_data.js'></script>
+<script src='/services/wl_search_state.js'></script>
+<script src='/controllers/search.js'></script>
+<script src='/controllers/chart.js'></script>
+<script src='/directives/wl_tabular.js'></script>
 </body>
 </html>

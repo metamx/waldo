@@ -1,4 +1,8 @@
 
+var request = require('request');
+
+var config = require('../../config');
+
 function queryDruid(druidQuery, callback) {
   request.post({
     url: config.Druid.url,
@@ -7,7 +11,11 @@ function queryDruid(druidQuery, callback) {
       "Content-Type": "application/json"
     }
   }, function(err, res, body) {
-    callback(null, JSON.parse(body));
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, JSON.parse(body));
+    }
   });
 }
 

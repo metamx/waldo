@@ -1,6 +1,4 @@
 
-var request = require('request');
-
 var config = require('../../config');
 var Adapters = require('../adapters');
 
@@ -75,4 +73,10 @@ function druidResultToEvents(druidResult) {
     });
   });
   return flattenedEvents;
+};
+
+module.exports = {
+  searchQueryToDruidQuery: searchQueryToDruidQuery,
+  queryDruid: queryDruid,
+  druidResultToEvents: druidResultToEvents
 };
