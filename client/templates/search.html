@@ -1,0 +1,53 @@
+<div ng-controller='searchController' class='container'>
+  <div class='input-group'>
+    <input type='text' class='form-control' ng-model='searchQuery'>
+    <span class='input-group-btn'>
+      <button class='btn btn-default' type='submit' ng-click='search()'>Search</button>
+    </span>
+  </div>
+</div>
+
+<div
+  ng-controller='reportCreatorController'
+  class='container'
+  ng-show='!loading() && !emptyList()'>
+  <div class='report-creator'>
+    <div class='row'>
+      <div class='col-md-2'>
+        <button class='btn btn-default btn-sm' ng-click='createReport()'>
+          Create Report
+        </button>
+      </div>
+      <div class='col-md-3'>
+        <label>Chart Name:</label>
+        <input type='text' class='form-control' ng-model='chartName'/>
+      </div>
+      <div class='col-md-3'>
+        <label>Chart Type:</label>
+        <select
+          class='form-control'
+          ng-model='chartType'
+          ng-options='type for type in chartTypes'>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-controller='chartController' class='container'>
+  <div class='row'>
+    <div class='col-md-12' ng-show='loading()'>
+      Loading...
+    </div>
+    <div class='col-md-12' ng-show='!loading() && !emptyList()'>
+      {{searchResults.data.length}} events fetched.
+    </div>
+    <div class='col-md-12' ng-show='emptyList()'>
+      No search results at the moment.
+    </div>
+  </div>
+  <div ng-show='!loading() && !emptyList()'>
+    <wl-count-chart class='row'></wl-count-chart>
+    <wl-tabular class='row'></wl-tabular>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+
+<div class='container'>
+  <table class='table col-md-12 row'>
+    <thead>
+      <tr>
+        <th class='col-md-1'>#</th>
+        <th class='col-md-5'>Report Name</th>
+        <th class='col-md-6'>Report Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat='report in Report.reportCollection'>
+        <td ng-click=''>
+          <a
+            class="glyphicon glyphicon-chevron-right"
+            ng-href='/reports/{{$index}}'>
+          </a>
+        </td>
+        <td>report.name</td>
+        <td>report.type</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

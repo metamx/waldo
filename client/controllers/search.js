@@ -1,7 +1,9 @@
 
 waldoApp.controller('searchController', function($scope, $http, wlSearchData, wlSearchState) {
   $scope.search = function() {
-    var querystring = searchQueryToQuerystring($scope.searchQuery);
+    var searchQuery = $scope.searchQuery;
+    var querystring = searchQueryToQuerystring(searchQuery);
+
     $http.post('/search?' + querystring).then(function(result) {
       wlSearchState.state = 'displaying';
       wlSearchData.data = result.data.events;

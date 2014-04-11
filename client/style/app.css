@@ -62,6 +62,16 @@ td p {
 .report-creator .btn {
   width: 100%;
 }
+.report-creator input {
+  display: inline-block;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  width: 140px;
+  line-height: 1.5;
+  height: 30px;
+}
 
 .report-creator select {
   display: inline-block;

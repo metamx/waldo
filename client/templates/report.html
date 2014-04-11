@@ -1,0 +1,28 @@
+
+<div class='container'>
+  <table class='table col-md-12'>
+    <thead>
+      <tr>
+        <th class='col-md-1'>#</th>
+        <th class='col-md-2'>Time</th>
+        <th class='col-md-9'>Event</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat='searchResult in searchResults.data' ng-class='{ "expanded": expandedIndex($index) }'>
+        <td ng-click='expandEvent($index)'>
+          <span ng-show='!expandedIndex($index)' class="glyphicon glyphicon-chevron-right"></span>
+          <span ng-show='expandedIndex($index)' class='glyphicon glyphicon-chevron-down'></span>
+        </td>
+        <td>{{getTime(searchResult)}}</td>
+        <td>
+          <p>{{searchResult}}</p>
+          <div ng-show='expandedIndex($index)'>
+            <br/>
+            <pre>{{expandedEvent(searchResult)}}</pre>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
