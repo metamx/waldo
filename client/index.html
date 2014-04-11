@@ -9,8 +9,19 @@
 </head>
 
 <body>
-<div class='header'>
-  <div class='container'><h3>Where's Waldo?</h3></div>
+<div
+  class='header navbar navbar-default navbar-static-top'
+  role='navigation'
+  ng-controller='headerController'>
+  <div class='container'>
+    <div class='navbar-header'>
+      <h3>Where's Waldo?</h3>
+    </div>
+    <ul class='nav navbar-nav navbar-right'>
+      <li ng-class='getNavClass("/")'><a href='#/'>Search</a></li>
+      <li ng-class='getNavClass("/reports")'><a href='#/reports'>Reports</a></li>
+    </ul>
+  </div>
 </div>
 
 <div ng-view></div>
@@ -28,6 +39,7 @@
 <script src='/controllers/reports.js'></script>
 <script src='/controllers/report_creator.js'></script>
 <script src='/controllers/report.js'></script>
+<script src='/controllers/header.js'></script>
 <script src='/directives/wl_tabular.js'></script>
 </body>
 </html>

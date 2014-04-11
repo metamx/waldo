@@ -1,22 +1,26 @@
 
-waldoApp.controller('reportsController', function($scope, $routeParams, wlReport) {
+waldoApp.controller('reportController', function($scope, $routeParams, wlReport) {
   $scope.report = wlReport.reportCollection[$routeParams.id];
   $scope.searchResults = $scope.report;
+
+  var searchState = {
+    expandedRow: null
+  };
 
   $scope.getTime = function(event) {
     return new Date(event.timestamp).toLocaleString();
   }
 
   $scope.expandEvent = function(index) {
-    if (wlSearchState.expandedRow === index) {
-      wlSearchState.expandedRow = null;
+    if (searchState.expandedRow === index) {
+      searchState.expandedRow = null;
     } else {
-      wlSearchState.expandedRow = index;
+      searchState.expandedRow = index;
     }
   }
 
   $scope.expandedIndex = function(index) {
-    return wlSearchState.expandedRow === index;
+    return searchState.expandedRow === index;
   }
 
   $scope.expandedEvent = function(event) {

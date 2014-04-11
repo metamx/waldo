@@ -1,5 +1,6 @@
 
 <div class='container'>
+  <p>There are {{Report.reportCollection.length}} reports</p>
   <table class='table col-md-12 row'>
     <thead>
       <tr>
@@ -13,7 +14,7 @@
         <td ng-click=''>
           <a
             class="glyphicon glyphicon-chevron-right"
-            ng-href='/reports/{{$index}}'>
+            ng-href='#/reports/{{$index}}'>
           </a>
         </td>
         <td>report.name</td>
