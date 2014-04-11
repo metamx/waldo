@@ -34,9 +34,7 @@
       No search results at the moment.
     </div>
   </div>
-  <div class='row' ng-show='!loading() && !emptyList()'>
-    <wl-tabular></wl-tabular>
-  </div>
+  <wl-tabular class='row' ng-show='!loading() && !emptyList()'></wl-tabular>
 </div>
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>

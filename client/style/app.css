@@ -1,4 +1,12 @@
 
+table {
+  table-layout: fixed;
+}
+
+td p {
+  overflow-wrap: break-word;
+}
+
 .header {
   position: relative;
   box-sizing: border-box;
