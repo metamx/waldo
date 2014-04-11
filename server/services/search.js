@@ -19,7 +19,7 @@ function searchQueryToDruidQuery(searchQuery) {
       intervalStart + '/' + intervalEnd
     ],
     "filter": filter,
-    "pagingSpec": { "pagingIdentifiers": {}, "threshold": 50 }
+    "pagingSpec": { "pagingIdentifiers": {}, "threshold": 100 }
   };
   return druidQuery;
 }
