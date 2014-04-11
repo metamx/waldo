@@ -22,6 +22,29 @@
   </div>
 </div>
 
+<div
+  ng-controller='reportCreatorController'
+  class='container'
+  ng-show='!loading() && !emptyList()'>
+  <div class='report-creator'>
+    <div class='row'>
+      <div class='col-md-2'>
+        <button class='btn btn-default btn-sm' ng-click='createReport()'>
+          Create Report
+        </button>
+      </div>
+      <div class='col-md-3'>
+        <label>Chart Type:</label>
+        <select
+          class='form-control'
+          ng-model='chartType'
+          ng-options='type.name for type in chartTypes'>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div ng-controller='chartController' class='container'>
   <div class='row'>
     <div class='col-md-12' ng-show='loading()'>
@@ -48,6 +71,7 @@
 <script src='/services/wl_search_state.js'></script>
 <script src='/controllers/search.js'></script>
 <script src='/controllers/chart.js'></script>
+<script src='/controllers/report_creator.js'></script>
 <script src='/directives/wl_tabular.js'></script>
 </body>
 </html>
