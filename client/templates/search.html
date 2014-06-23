@@ -1,10 +1,12 @@
-<div ng-controller='searchController' class='container'>
+<div class='container'>
+  <form ng-submit='search()' ng-controller='searchController'>
   <div class='input-group'>
     <input type='text' class='form-control' ng-model='searchQuery'>
     <span class='input-group-btn'>
-      <button class='btn btn-default' type='submit' ng-click='search()'>Search</button>
+      <button class='btn btn-default' type='submit'>Search</button>
     </span>
   </div>
+</form>
 </div>
 
 <div
