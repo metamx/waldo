@@ -4,7 +4,7 @@ var Adapters = require('../adapters');
 
 function searchQueryToDruidQuery(searchQuery) {
   var intervalEnd = new Date();
-  var intervalStart = new Date(intervalEnd - 300 * 60 * 1000);
+  var intervalStart = new Date(intervalEnd - 15 * 24 * 3600 * 1000);
   intervalEnd = intervalEnd.toISOString();
   intervalStart = intervalStart.toISOString();
 
