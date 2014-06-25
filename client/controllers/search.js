@@ -1,10 +1,7 @@
 
 waldoApp.controller('searchController', function($scope, $http, wlSearchData, wlSearchState) {
   $scope.search = function() {
-    var searchQuery = $scope.searchQuery;
-    var querystring = searchQueryToQuerystring(searchQuery);
-
-    $http.post('/search?' + querystring).then(function(result) {
+    $http.post('/search?', { filter: $scope.searchQuery }).then(function(result) {
       wlSearchState.state = 'displaying';
       wlSearchData.data = result.data.events;
       wlSearchState.expandedRow = null;
@@ -14,9 +11,4 @@ waldoApp.controller('searchController', function($scope, $http, wlSearchData, wl
     });
     wlSearchState.state = 'loading';
   };
-
-  function searchQueryToQuerystring(query) {
-    if (!query) return '';
-    return query.split(' ').join('&');
-  }
 });

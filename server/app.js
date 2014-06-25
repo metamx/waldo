@@ -22,8 +22,9 @@ if (env === 'development') {
 }
 
 app.post('/search', function(req, res) {
-  var searchQuery = url.parse(req.url).query;
-  var druidQuery = Services.Search.searchQueryToDruidQuery(searchQuery);
+  var druidQuery = Services.Search.searchQueryToDruidQuery(
+    req.body.filter
+  );
 
   Services.Search.queryDruid(druidQuery, function(err, result) {
     if (err) return res.json(500, err);

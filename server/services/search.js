@@ -1,14 +1,16 @@
 
 var config = require('../../config');
 var Adapters = require('../adapters');
+var parser = require('../parser.js');
 
 function searchQueryToDruidQuery(searchQuery) {
   var intervalEnd = new Date();
   var intervalStart = new Date(intervalEnd - 15 * 24 * 3600 * 1000);
+  var threshold = 100;
   intervalEnd = intervalEnd.toISOString();
   intervalStart = intervalStart.toISOString();
 
-  var filter = searchQueryToFilter(searchQuery);
+  var filter = parseQuery(searchQuery);
   var druidQuery = {
     "queryType": "select",
     "dataSource": config.Druid.data_source,
@@ -19,9 +21,14 @@ function searchQueryToDruidQuery(searchQuery) {
       intervalStart + '/' + intervalEnd
     ],
     "filter": filter,
-    "pagingSpec": { "pagingIdentifiers": {}, "threshold": 100 }
+    "pagingSpec": { "pagingIdentifiers": {}, "threshold": threshold },
+    "context" : { "useCache" : false, "populateCache": false}
   };
   return druidQuery;
+}
+
+function parseQuery(searchQuery) {
+  return parser.parse(searchQuery)
 }
 
 function searchQueryToFilter(searchQuery) {
